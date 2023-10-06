@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nominatim HTML Search Page</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+    <h3>Halifax, Englend latitude and longitude:</h3>
+    <p id="lat"></p>
+    <p id="lon"></p>
+    <h3>And with 10 degrees added:</h3>
+    <p id="lat+10"></p>
+    <p id="lon+10"></p>
+
+    <script>
+        function displayCoords(locationData) {
+            document.getElementById("lat").innerHTML = locationData[0].lat;
+            document.getElementById("lon").innerHTML = locationData[0].lon;
+            plus10(locationData);
+        }
+
+        function plus10(obj) {
+            let latPlus10 = Number(obj[0].lat) + 10;
+            let lonPlus10 = Number(obj[0].lon) + 10;
+            document.getElementById("lat+10").innerHTML = latPlus10;
+            document.getElementById("lon+10").innerHTML = lonPlus10;
+        }
+
+        function getLocationData(myCallback) {
+            let req = new XMLHttpRequest();
+            req.responseType = 'json';
+            req.onload = function () {
+                if (req.status == 200) {
+                    myCallback(this.response);
+                } else {
+                    myCallback("Error: " + req.status);
+                }
+            }
+            req.open('GET', "https://nominatim.openstreetmap.org/search?postalcode=Hx38TH&format=json&countrycodes=gb");
+            req.send();
+        }
+
+        getLocationData(displayCoords);
+    </script>
+</body>
+</html>
